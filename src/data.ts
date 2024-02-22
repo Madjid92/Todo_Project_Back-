@@ -1,10 +1,10 @@
-import { Task } from "./types"
+import { Task } from './types'
 
-export const tab:Task[] = []
+export const tab: Task[] = []
 
-const task1:Task = {
-    id:1,
-    name:'Todo back Initialisation',
-    description: 'Npm, typescript and express init'
+const task1: Task = {
+  id: 1,
+  name: 'Barghod',
+  description: 'Tonton flingueur',
 }
-tab.push(task1);
+tab.push(task1)

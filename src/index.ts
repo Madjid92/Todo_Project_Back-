@@ -14,6 +14,12 @@ app.get('/tasks', (req: Request, res: Response<Task[]>) => {
   res.send(tab)
 })
 
+app.get('/tasks/:id', (req: Request<{ id: string }>, res: Response<Task>) => {
+  const id: number = parseInt(req.params.id)
+
+  return res.send(tab.find((t) => t.id === id))
+})
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
