@@ -2,14 +2,18 @@ export interface Task {
   id: string
   name: string
   description: string
+  status: { label: TaskStatus; startDate: Date }
 }
 
+export enum TaskStatus {
+  CREATED = 'CREATED',
+}
 export interface ErrorDesc {
   code: string
   message: string
 }
 
-export type TaskWioutId = Omit<Task, 'id'>
+export type TaskWioutId = Omit<Task, 'id' | 'status'>
 
 export interface Empty {}
 
