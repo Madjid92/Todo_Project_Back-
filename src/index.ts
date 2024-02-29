@@ -1,7 +1,14 @@
 import express, { Request, Response } from 'express'
 import cors from 'cors'
 import { tab } from './data'
-import { Empty, ErrorDesc, HttpCodeError, Task, TaskWioutId } from './types'
+import {
+  Empty,
+  ErrorDesc,
+  HttpCodeError,
+  Task,
+  TaskStatus,
+  TaskWioutId,
+} from './types'
 import bodyParser from 'body-parser'
 import { v4 } from 'uuid'
 import { badRequastHttpError, notFoundHttpError } from './httpError'
@@ -13,7 +20,7 @@ const port = 3000
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(cors({ origin: '*' }))
-app.get('/', (req: Request, res: Response<string>) => {
+app.get('/', (_req: Request, res: Response<string>) => {
   console.log('test')
   res.send('Hello World!')
 })
@@ -45,11 +52,11 @@ app.post<Empty, Task | ErrorDesc, TaskWioutId>('/tasks', (req, res) => {
       .send(badRequastHttpError('description', checkBodyDescription))
   }
   const id = v4()
-  const task = {
+  const task: Task = {
     id: id,
     name: name,
     description: description,
-    status: { label: 'Created', startDate: Date.now() },
+    status: { label: TaskStatus.CREATED, startDate: new Date() },
   }
   tab.push(task)
   return res.send(task)
