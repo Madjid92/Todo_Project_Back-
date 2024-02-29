@@ -69,6 +69,14 @@ app.patch<{ id: string }, Task | ErrorDesc, TaskWioutId>(
   }
 )
 
+app.delete<string, { id: string }, Empty, Task>('/tasks/:id', (req, res) => {
+  const { id } = req.params
+  const deleteTaskIndex = tab.findIndex((e) => e.id === id)
+  if (deleteTaskIndex === -1) return res.status(404).send(notFoundHttpError(id))
+  tab.splice(deleteTaskIndex, 1)
+  return res.send(`TASK DELETED !`)
+})
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
