@@ -45,7 +45,12 @@ app.post<Empty, Task | ErrorDesc, TaskWioutId>('/tasks', (req, res) => {
       .send(badRequastHttpError('description', checkBodyDescription))
   }
   const id = v4()
-  const task = { id: id, name: name, description: description }
+  const task = {
+    id: id,
+    name: name,
+    description: description,
+    status: { label: 'Created', startDate: Date.now() },
+  }
   tab.push(task)
   return res.send(task)
 })
