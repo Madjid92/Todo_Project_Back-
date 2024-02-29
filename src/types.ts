@@ -7,6 +7,12 @@ export interface Task {
 
 export enum TaskStatus {
   CREATED = 'CREATED',
+  DRAFT = 'DRAFT',
+  TODO = 'TODO',
+  IN_PROGRESS = 'IN_PROGRESS',
+  TO_VALIDATE = 'TO_VALIDATE',
+  DONE = 'DONE',
+  ARCHIVED = 'ARCHIVED',
 }
 export interface ErrorDesc {
   code: string
