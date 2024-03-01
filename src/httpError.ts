@@ -6,6 +6,12 @@ export const notFoundHttpError = (id: string) => {
     message: `can't find task with id ${id}`,
   }
 }
+export const notFoundTaskHistoryError = (id: string) => {
+  return {
+    code: HttpCodeError.RESSOUSE_NOT_FOUND,
+    message: `can't find task history with id ${id}`,
+  }
+}
 
 export const UpgradeStatusError = (label: string) => {
   return {

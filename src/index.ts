@@ -17,6 +17,7 @@ import {
   UpgradeStatusError,
   badRequastHttpError,
   notFoundHttpError,
+  notFoundTaskHistoryError,
 } from './httpError'
 import { strParamsValidation, validatePatchTask } from './validation'
 
@@ -93,7 +94,6 @@ app.delete<string, { id: string }, Empty, Task>('/tasks/:id', (req, res) => {
   if (deleteTaskIndex === -1) return res.status(404).send(notFoundHttpError(id))
   tab.splice(deleteTaskIndex, 1)
   delete tasks_status_history[id]
-  console.log(tasks_status_history)
   return res.send(`TASK DELETED !`)
 })
 
@@ -126,6 +126,16 @@ app.put<string, { id: string }, IStatusUpdate | ErrorDesc, IStatusUpdate>(
     }
     currentTask.status = newStatus
     return res.send(newStatus)
+  }
+)
+
+app.get<string, { id: string }, StatusHistoryType[] | ErrorDesc>(
+  '/tasks/:id/status/history',
+  (req, res) => {
+    const { id } = req.params
+    const task_history = tasks_status_history[id]
+    if (!task_history) return res.status(404).send(notFoundTaskHistoryError(id))
+    return res.send(task_history)
   }
 )
 
