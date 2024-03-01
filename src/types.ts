@@ -29,4 +29,17 @@ export enum HttpCodeError {
   MAX_LENGHT_ERROR = 'MAX_LENGHT_ERROR',
   EMPTY_STR_ERROR = 'EMPTY_STR_ERROR',
   VALIDE_STR = 'VALIDE_STR',
+  INACCESSIBLE_EVOLUTION = 'INACCESSIBLE_EVOLUTION',
+}
+export interface IStatusUpdate {
+  label: TaskStatus
+}
+export type StatusHistoryType = {
+  label: string
+  startDate: Date
+  endDate: Date
+}
+
+export interface ITasksStatusHistory {
+  [id: string]: StatusHistoryType[]
 }

@@ -1,17 +1,23 @@
 import express, { Request, Response } from 'express'
 import cors from 'cors'
-import { tab } from './data'
+import { tab, tasks_status_history, workflow } from './data'
 import {
   Empty,
   ErrorDesc,
   HttpCodeError,
+  IStatusUpdate,
+  StatusHistoryType,
   Task,
   TaskStatus,
   TaskWioutId,
 } from './types'
 import bodyParser from 'body-parser'
 import { v4 } from 'uuid'
-import { badRequastHttpError, notFoundHttpError } from './httpError'
+import {
+  UpgradeStatusError,
+  badRequastHttpError,
+  notFoundHttpError,
+} from './httpError'
 import { strParamsValidation, validatePatchTask } from './validation'
 
 const app = express()
@@ -88,6 +94,38 @@ app.delete<string, { id: string }, Empty, Task>('/tasks/:id', (req, res) => {
   tab.splice(deleteTaskIndex, 1)
   return res.send(`TASK DELETED !`)
 })
+
+app.put<string, { id: string }, IStatusUpdate | ErrorDesc, IStatusUpdate>(
+  '/tasks/:id/status',
+  (req, res) => {
+    const { id } = req.params
+    const { label } = req.body
+    const currentTask = tab.find((e) => e.id === id)
+    if (!currentTask) return res.status(404).send(notFoundHttpError(id))
+    const currentStatus = currentTask.status.label
+    const statusEvolution = workflow[currentStatus]
+    const agreement = statusEvolution.find((e) => e === label)
+    if (!agreement) return res.status(404).send(UpgradeStatusError(label))
+    const currentDate = new Date()
+    const taskStatusHistory: StatusHistoryType = {
+      ...currentTask.status,
+      endDate: currentDate,
+    }
+    const task_history = tasks_status_history[id]
+    if (!Array.isArray(task_history)) {
+      tasks_status_history[id] = [taskStatusHistory]
+    } else {
+      task_history.push(taskStatusHistory)
+    }
+
+    const newStatus = {
+      label,
+      startDate: currentDate,
+    }
+    currentTask.status = newStatus
+    return res.send(newStatus)
+  }
+)
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
