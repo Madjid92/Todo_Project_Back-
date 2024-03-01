@@ -92,6 +92,8 @@ app.delete<string, { id: string }, Empty, Task>('/tasks/:id', (req, res) => {
   const deleteTaskIndex = tab.findIndex((e) => e.id === id)
   if (deleteTaskIndex === -1) return res.status(404).send(notFoundHttpError(id))
   tab.splice(deleteTaskIndex, 1)
+  delete tasks_status_history[id]
+  console.log(tasks_status_history)
   return res.send(`TASK DELETED !`)
 })
 
@@ -117,7 +119,7 @@ app.put<string, { id: string }, IStatusUpdate | ErrorDesc, IStatusUpdate>(
     } else {
       task_history.push(taskStatusHistory)
     }
-
+    console.log(tasks_status_history)
     const newStatus = {
       label,
       startDate: currentDate,
