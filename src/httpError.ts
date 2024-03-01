@@ -7,6 +7,13 @@ export const notFoundHttpError = (id: string) => {
   }
 }
 
+export const UpgradeStatusError = (label: string) => {
+  return {
+    code: HttpCodeError.INACCESSIBLE_EVOLUTION,
+    message: `We cannot change the status of this task to ${label}`,
+  }
+}
+
 const { MAX_LENGHT_ERROR, MIN_LENGHT_ERROR, EMPTY_STR_ERROR } = HttpCodeError
 /**
  *

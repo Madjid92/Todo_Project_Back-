@@ -1,4 +1,4 @@
-import { Task, TaskStatus } from './types'
+import { ITasksStatusHistory, Task, TaskStatus } from './types'
 
 export const tab: Task[] = []
 
@@ -17,4 +17,14 @@ export const workflow: IStatusTrasition = {
   [TaskStatus.TO_VALIDATE]: [TaskStatus.DONE, TaskStatus.IN_PROGRESS],
   [TaskStatus.DONE]: [TaskStatus.ARCHIVED],
   [TaskStatus.ARCHIVED]: [],
+}
+
+export const tasks_status_history: ITasksStatusHistory = {
+  // '<task-id1>': [
+  //   {
+  //     label: '<status_label>',
+  //     startDate: 'the start date of status',
+  //     endDate: 'the end date of status',
+  //   },
+  // ],
 }
