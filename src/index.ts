@@ -8,6 +8,7 @@ import {
   ErrorDesc,
   HttpCodeError,
   IStatusUpdate,
+  ITasksStatusHistory,
   SIGNALS,
   StatusHistoryType,
   Task,
@@ -27,6 +28,19 @@ import { strParamsValidation, validatePatchTask } from './validation'
 const app = express()
 const port = 3000
 const SAVE_TASK_FILE_PATH = 'data/tasks-data.json'
+const SAVE_HISTORY_TASK_FILE_PATH = 'data/history-tasks-data.json'
+
+export const loadHistoryTasksData = () => {
+  const txtFilePathRead = path.resolve(SAVE_HISTORY_TASK_FILE_PATH)
+  if (!fs.existsSync(txtFilePathRead)) return
+  const fileContents = fs.readFileSync(txtFilePathRead, 'utf-8')
+  if (!fileContents) return
+  const dataSaved: ITasksStatusHistory = JSON.parse(fileContents)
+  Object.entries(dataSaved).forEach((e) => {
+    tasks_status_history[e[0]] = e[1]
+  })
+}
+
 const loadTasksData = () => {
   const txtFilePathRead = path.resolve(SAVE_TASK_FILE_PATH)
   if (!fs.existsSync(txtFilePathRead)) return
@@ -38,6 +52,7 @@ const loadTasksData = () => {
 }
 
 loadTasksData()
+loadHistoryTasksData()
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
@@ -160,12 +175,18 @@ app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
 
+const saveHistoryTasksData = () => {
+  const txtFilePathWrite = path.resolve(SAVE_HISTORY_TASK_FILE_PATH)
+  fs.writeFileSync(txtFilePathWrite, JSON.stringify(tasks_status_history))
+}
+
 const saveTasksData = () => {
   const txtFilePathWrite = path.resolve(SAVE_TASK_FILE_PATH)
   fs.writeFileSync(txtFilePathWrite, JSON.stringify(tab))
+  saveHistoryTasksData()
   console.log('fin de process ')
   process.exit()
 }
 SIGNALS.forEach((signal) => {
-  process.once(signal, saveTasksData)
+  process.on(signal, saveTasksData)
 })
