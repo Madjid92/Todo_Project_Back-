@@ -1,11 +1,15 @@
 import express, { Request, Response } from 'express'
 import cors from 'cors'
+import fs from 'fs'
+import path from 'path'
 import { tab, tasks_status_history, workflow } from './data'
 import {
   Empty,
   ErrorDesc,
   HttpCodeError,
   IStatusUpdate,
+  ITasksStatusHistory,
+  SIGNALS,
   StatusHistoryType,
   Task,
   TaskStatus,
@@ -23,6 +27,32 @@ import { strParamsValidation, validatePatchTask } from './validation'
 
 const app = express()
 const port = 3000
+const SAVE_TASK_FILE_PATH = 'data/tasks-data.json'
+const SAVE_HISTORY_TASK_FILE_PATH = 'data/history-tasks-data.json'
+
+export const loadHistoryTasksData = () => {
+  const txtFilePathRead = path.resolve(SAVE_HISTORY_TASK_FILE_PATH)
+  if (!fs.existsSync(txtFilePathRead)) return
+  const fileContents = fs.readFileSync(txtFilePathRead, 'utf-8')
+  if (!fileContents) return
+  const dataSaved: ITasksStatusHistory = JSON.parse(fileContents)
+  Object.entries(dataSaved).forEach((e) => {
+    tasks_status_history[e[0]] = e[1]
+  })
+}
+
+const loadTasksData = () => {
+  const txtFilePathRead = path.resolve(SAVE_TASK_FILE_PATH)
+  if (!fs.existsSync(txtFilePathRead)) return
+  const fileContents = fs.readFileSync(txtFilePathRead, 'utf-8')
+  if (!fileContents) return
+  const dataSaved = JSON.parse(fileContents)
+  tab.push(...dataSaved)
+  return
+}
+
+loadTasksData()
+loadHistoryTasksData()
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
@@ -133,12 +163,30 @@ app.get<string, { id: string }, StatusHistoryType[] | ErrorDesc>(
   '/tasks/:id/status/history',
   (req, res) => {
     const { id } = req.params
+    const task = tab.find((e) => e.id === id)
+    if (!task) return res.status(404).send(notFoundTaskHistoryError(id))
     const task_history = tasks_status_history[id]
-    if (!task_history) return res.status(404).send(notFoundTaskHistoryError(id))
+    if (!task_history) return res.send([])
     return res.send(task_history)
   }
 )
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
+})
+
+const saveHistoryTasksData = () => {
+  const txtFilePathWrite = path.resolve(SAVE_HISTORY_TASK_FILE_PATH)
+  fs.writeFileSync(txtFilePathWrite, JSON.stringify(tasks_status_history))
+}
+
+const saveTasksData = () => {
+  const txtFilePathWrite = path.resolve(SAVE_TASK_FILE_PATH)
+  fs.writeFileSync(txtFilePathWrite, JSON.stringify(tab))
+  saveHistoryTasksData()
+  console.log('fin de process ')
+  process.exit()
+}
+SIGNALS.forEach((signal) => {
+  process.on(signal, saveTasksData)
 })

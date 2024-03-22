@@ -1,12 +1,13 @@
 {
     "version": "0.2.0",
     "configurations": [
-      {
+      
+     {
         "name": "Launch TypeScript",
-        "type": "node",
+        "command": "npm start",
         "request": "launch",
-        "program": "${workspaceFolder}/dist/index.js",
+        "type": "node-terminal",
+      }  
+    ],
 
-      }
-    ]
   }
