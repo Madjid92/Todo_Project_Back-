@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:dev": "tsc --build -w",
-    "start:dev": "nodemon ./dist/index.js"
+    "start:dev": "nodemon --signal SIGINT --watch ./dist ./dist/index.js",
+    "start": "node ./dist/index.js"
   },
   "author": "",
   "license": "ISC",
