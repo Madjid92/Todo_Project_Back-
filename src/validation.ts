@@ -1,9 +1,18 @@
 import { badRequastHttpError } from './httpError'
 import { ErrorDesc, HttpCodeError, TaskWioutId } from './types'
 
-const { MAX_LENGHT_ERROR, MIN_LENGHT_ERROR, EMPTY_STR_ERROR, VALIDE_STR } =
-  HttpCodeError
+export const {
+  MAX_LENGHT_ERROR,
+  MIN_LENGHT_ERROR,
+  EMPTY_STR_ERROR,
+  VALIDE_STR,
+} = HttpCodeError
 
+export class StrParamsValidationMaxMin extends Error {
+  constructor() {
+    super('Error : min must be less then max')
+  }
+}
 /**
  *
  * @param value value to check
@@ -16,6 +25,7 @@ export const strParamsValidation = (
   minlength: number,
   maxlength: number
 ): HttpCodeError => {
+  if (minlength >= maxlength) throw new StrParamsValidationMaxMin()
   if (!value) return EMPTY_STR_ERROR
 
   value = value.trim()

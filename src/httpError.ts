@@ -13,7 +13,7 @@ export const notFoundTaskHistoryError = (id: string) => {
   }
 }
 
-export const UpgradeStatusError = (label: string) => {
+export const upgradeStatusError = (label: string) => {
   return {
     code: HttpCodeError.INACCESSIBLE_EVOLUTION,
     message: `We cannot change the status of this task to ${label}`,
@@ -35,20 +35,20 @@ export const badRequastHttpError = (
     case MAX_LENGHT_ERROR: {
       return {
         code: MAX_LENGHT_ERROR,
-        message: `length of ${paramName} exceed `,
+        message: `length of ${paramName} exceed`,
       }
     }
     case MIN_LENGHT_ERROR: {
       return {
         code: MIN_LENGHT_ERROR,
-        message: `length of ${paramName} under of minmal length `,
+        message: `length of ${paramName} under of minmal length`,
       }
     }
 
     case EMPTY_STR_ERROR: {
       return {
         code: EMPTY_STR_ERROR,
-        message: `param ${paramName} is empty `,
+        message: `param ${paramName} is empty`,
       }
     }
     default:

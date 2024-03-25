@@ -18,7 +18,7 @@ import {
 import bodyParser from 'body-parser'
 import { v4 } from 'uuid'
 import {
-  UpgradeStatusError,
+  upgradeStatusError,
   badRequastHttpError,
   notFoundHttpError,
   notFoundTaskHistoryError,
@@ -137,7 +137,7 @@ app.put<string, { id: string }, IStatusUpdate | ErrorDesc, IStatusUpdate>(
     const currentStatus = currentTask.status.label
     const statusEvolution = workflow[currentStatus]
     const agreement = statusEvolution.find((e) => e === label)
-    if (!agreement) return res.status(404).send(UpgradeStatusError(label))
+    if (!agreement) return res.status(404).send(upgradeStatusError(label))
     const currentDate = new Date()
     const taskStatusHistory: StatusHistoryType = {
       ...currentTask.status,

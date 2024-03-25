@@ -4,16 +4,18 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build:dev": "tsc --build -w",
     "start:dev": "nodemon --signal SIGINT --watch ./dist ./dist/index.js",
-    "start": "node ./dist/index.js"
+    "start": "node ./dist/index.js",
+    "test": "jest"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@jest/globals": "^29.7.0",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
+    "@types/jest": "^29.5.12",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "eslint": "^8.56.0",
@@ -21,9 +23,11 @@
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-prettier": "^5.1.3",
     "husky": "^9.0.10",
+    "jest": "^29.7.0",
     "lint-staged": "^15.2.2",
     "nodemon": "^3.0.3",
     "prettier": "^3.2.5",
+    "ts-jest": "^29.1.2",
     "typescript": "^5.3.3",
     "typescript-plugin-css-modules": "^5.0.2"
   },
